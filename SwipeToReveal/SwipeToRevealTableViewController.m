@@ -19,7 +19,7 @@
 
 -(void)viewDidLoad
 {
-    [super viewDidLoad];
+    [super viewDidLoad]; 
 }
 
 -(void)dealloc
@@ -70,6 +70,7 @@
 {
     if (self.currentRevealedCell) {
         [self.currentRevealedCell concealBottomView];
+        self.currentRevealedCell = nil;
     }
 }
 
@@ -77,11 +78,21 @@
 
 - (void)tableCellSwiped:(UISwipeGestureRecognizer *)recognizer
 {
-    if (self.currentRevealedCell) {
+    // if the revealed cell has been swiped - conceal it
+    if ([recognizer.view isEqual:self.currentRevealedCell]) {
         [self.currentRevealedCell concealBottomView];
+        self.currentRevealedCell = nil;
     }
-    self.currentRevealedCell = (SwipeToRevealTableCell *)recognizer.view;
-    [self.currentRevealedCell revealBottomView];
+    else {
+        // conceal the previous revealed cell
+        if (self.currentRevealedCell) {
+            [self.currentRevealedCell concealBottomView];
+            self.currentRevealedCell = nil;
+        }
+        // reveal the swiped cell
+        self.currentRevealedCell = (SwipeToRevealTableCell *)recognizer.view;
+        [self.currentRevealedCell revealBottomView];
+    }
 }
 
 @end
